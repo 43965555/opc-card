@@ -19,10 +19,18 @@
             --gold: #c9a84c;
             --gold-light: #e8d5a3;
             --gold-dark: #b8962c;
+            --gold-glow: rgba(201,168,76,0.15);
             --burgundy: #6b2a3a;
             --burgundy-light: #8a4a5a;
+            --burgundy-glow: rgba(107,42,58,0.08);
+            --wine: #4a1e2a;
+            --rose: #c49a8a;
+            --rose-light: #e8d6ce;
+            --sage: #9a9e7a;
+            --sage-light: #d4d8c0;
             --cream: #faf8f4;
             --ivory: #f5f0e8;
+            --warm-beige: #ede4d8;
             --charcoal: #1a1a1a;
             --warm-gray: #e8e0d0;
             --text: #5a4a3a;
@@ -46,8 +54,9 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(ellipse at 20% 30%, rgba(212,175,55,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 70%, rgba(107,42,58,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 15% 25%, rgba(212,175,55,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 75%, rgba(107,42,58,0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(154,158,122,0.03) 0%, transparent 50%),
                 repeating-linear-gradient(0deg, transparent, transparent 32px, rgba(0,0,0,0.01) 32px, rgba(0,0,0,0.01) 33px);
             pointer-events: none;
             z-index: 0;
@@ -56,7 +65,7 @@
         .card {
             max-width: 420px;
             width: 100%;
-            background: #ffffff;
+            background: linear-gradient(170deg, #ffffff 0%, #fefcf9 40%, #fcf9f5 100%);
             position: relative;
             z-index: 1;
             box-shadow: 0 4px 8px rgba(0,0,0,0.02), 0 12px 32px rgba(0,0,0,0.05), 0 40px 80px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
@@ -69,14 +78,34 @@
 
         .top-emboss {
             height: 4px;
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold), #f5ecc8, var(--gold), var(--gold-light), var(--gold-dark));
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), #f5ecc8, var(--gold-light), var(--gold), var(--gold-dark));
+            position: relative;
+            overflow: hidden;
+        }
+        .top-emboss::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .header {
             padding: 52px 44px 40px;
             text-align: center;
             position: relative;
-            background: linear-gradient(180deg, var(--cream) 0%, #ffffff 100%);
+            background: linear-gradient(180deg, var(--cream) 0%, #fdfaf5 50%, #ffffff 100%);
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 20px; left: 20px; right: 20px; bottom: 20px;
+            background: radial-gradient(ellipse at 50% 0%, var(--gold-glow) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .header::after {
@@ -111,17 +140,17 @@
 
         .mono-wrap .border-outer {
             position: absolute;
-            inset: -2px;
+            inset: -3px;
             transform: rotate(45deg);
-            background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold-dark), var(--gold-light), var(--gold));
-            box-shadow: 0 0 20px rgba(201,168,76,0.15);
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold), var(--gold-dark));
+            box-shadow: 0 0 24px rgba(201,168,76,0.2), 0 0 60px rgba(201,168,76,0.08);
         }
 
         .mono-wrap .border-mid {
             position: absolute;
             inset: 2px;
             transform: rotate(45deg);
-            background: var(--cream);
+            background: linear-gradient(135deg, var(--cream), var(--gold-light));
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
         }
 
@@ -129,8 +158,15 @@
             position: absolute;
             inset: 6px;
             transform: rotate(45deg);
-            background: linear-gradient(135deg, #ffffff, var(--ivory));
+            background: linear-gradient(135deg, #ffffff, var(--ivory), #f8f2e8);
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .mono-wrap .bg-core::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.8) 0%, transparent 60%);
+            pointer-events: none;
         }
 
         .mono-wrap .letter {
@@ -217,7 +253,7 @@
             gap: 6px;
             padding: 14px 28px 16px;
             margin-bottom: 14px;
-            background: #ffffff;
+            background: linear-gradient(180deg, #ffffff 0%, #fefcf9 100%);
             border: 1px solid var(--warm-gray);
             position: relative;
             box-shadow: 0 4px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8);
@@ -287,8 +323,18 @@
         .photo-strip .ps-frame.has-img .ps-label { display: none; }
 
         .body { padding: 40px 44px 32px; }
-        .section { margin-bottom: 30px; }
+        .section { margin-bottom: 30px; position: relative; }
         .section.no-mb { margin-bottom: 0; }
+        .section::after {
+            content: '';
+            position: absolute;
+            bottom: -16px; left: 50%;
+            transform: translateX(-50%);
+            width: 20px; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+        }
+        .section:last-child::after { display: none; }
+        .section.no-mb::after { display: none; }
 
         .sec-head {
             display: flex;
@@ -297,18 +343,28 @@
             margin-bottom: 14px;
         }
 
-        .sec-head .bar { width: 24px; height: 2px; background: var(--gold); flex-shrink: 0; box-shadow: 0 1px 3px rgba(201,168,76,0.2); }
+        .sec-head .bar { width: 24px; height: 2px; background: linear-gradient(180deg, var(--gold-light), var(--gold-dark)); flex-shrink: 0; box-shadow: 0 1px 3px rgba(201,168,76,0.25); }
         .sec-head .label { font-size: 8px; letter-spacing: 5px; color: var(--gold); font-weight: 600; font-family: Inter, -apple-system, Arial, sans-serif; }
-        .sec-head .line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--warm-gray), transparent); }
+        .sec-head .line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-light), var(--warm-gray), transparent); }
+        .sec-head .diamond { font-size: 6px; color: var(--gold-light); margin: 0 2px; }
 
         .tagline {
             font-size: 13px;
             line-height: 2;
             color: var(--text);
             padding: 16px 20px;
-            background: linear-gradient(135deg, var(--cream), var(--ivory));
+            background: linear-gradient(135deg, var(--cream), var(--ivory), #faf5ed);
             border-left: 2px solid var(--gold);
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .tagline::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 40px; height: 40px;
+            background: radial-gradient(circle at bottom right, var(--gold-glow) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .info-row {
@@ -339,15 +395,15 @@
         }
 
         .info-row .cell:first-child::after { display: none; }
-        .info-row .il { font-size: 8px; color: #bbb; letter-spacing: 2px; font-family: Inter, -apple-system, Arial, sans-serif; margin-bottom: 6px; }
+        .info-row .il { font-size: 8px; color: var(--text-light); letter-spacing: 2px; font-family: Inter, -apple-system, Arial, sans-serif; margin-bottom: 6px; text-transform: uppercase; }
         .info-row .iv, .info-row .iv.gold { font-family: Inter, -apple-system, Arial, sans-serif; }
         .info-row .iv { font-size: 16px; font-weight: 600; color: var(--charcoal); letter-spacing: 0.5px; }
-        .info-row .iv.gold { color: var(--gold); font-weight: 700; }
+        .info-row .iv.gold { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700; }
 
         .story-text { font-size: 13px; line-height: 2; color: var(--text); }
         .story-text p { margin-bottom: 12px; }
         .story-text p:last-child { margin-bottom: 0; }
-        .story-text .hl { color: var(--burgundy); font-weight: 600; }
+        .story-text .hl { color: var(--burgundy); font-weight: 600; text-shadow: 0 1px 2px rgba(107,42,58,0.1); }
         .story-text .muted { font-size: 12px; color: #999; }
 
         .quote {
@@ -358,7 +414,7 @@
             line-height: 1.9;
             padding: 16px 22px;
             margin: 14px 0;
-            background: linear-gradient(135deg, var(--cream), var(--ivory));
+            background: linear-gradient(135deg, var(--cream), var(--ivory), #f8f0e8);
             border-left: 2px solid var(--burgundy);
             position: relative;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 2px 8px rgba(0,0,0,0.03);
@@ -374,6 +430,16 @@
             font-style: italic;
             line-height: 1;
         }
+        .quote::after {
+            content: '"';
+            font-size: 48px;
+            color: var(--burgundy);
+            position: absolute;
+            bottom: -16px; right: 10px;
+            opacity: 0.08;
+            font-style: italic;
+            line-height: 1;
+        }
 
         .pain-points {
             display: grid;
@@ -384,13 +450,20 @@
 
         .pain-points .pp {
             padding: 10px 12px;
-            background: rgba(107,42,58,0.04);
+            background: linear-gradient(135deg, rgba(107,42,58,0.04), rgba(201,168,76,0.03));
             border: 1px solid rgba(107,42,58,0.08);
             font-size: 12px;
             color: var(--text);
             text-align: center;
             line-height: 1.5;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
         }
+        .pain-points .pp:hover {
+            background: linear-gradient(135deg, rgba(107,42,58,0.07), rgba(201,168,76,0.05));
+            border-color: var(--burgundy-light);
+            transform: translateY(-2px);
+        }
+        .pain-points .pp:active { transform: translateY(-1px) scale(0.97); }
 
         .pain-points .pp .pp-icon { display: block; margin-bottom: 4px; font-size: 14px; }
 
@@ -404,15 +477,28 @@
             padding: 16px 10px;
             text-align: center;
             border: 1px solid var(--warm-gray);
-            background: linear-gradient(180deg, var(--cream), #f8f4ee);
+            background: linear-gradient(180deg, #ffffff, var(--cream), #f8f4ee);
             box-shadow: 0 2px 6px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
-            transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+            transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+            position: relative;
+            overflow: hidden;
         }
+        .svc-grid .svc::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .svc-grid .svc:hover::before { opacity: 1; }
 
         .svc-grid .svc:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 18px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
             border-color: var(--gold);
+            background: linear-gradient(180deg, #ffffff, var(--cream), #fcf5e8);
         }
 
         .svc-grid .svc:active { transform: translateY(-1px) scale(0.98); }
@@ -424,22 +510,23 @@
 
         .audience .dot {
             display: inline-block;
-            width: 3px; height: 3px;
+            width: 4px; height: 4px;
             border-radius: 50%;
-            background: var(--burgundy);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             margin: 0 8px;
             vertical-align: middle;
-            box-shadow: 0 0 6px rgba(107,42,58,0.2);
+            box-shadow: 0 0 6px rgba(201,168,76,0.2);
         }
 
         .audience-desc {
             font-size: 12px;
-            color: #999;
+            color: var(--text-light);
             line-height: 1.8;
             margin-top: 8px;
             padding: 12px 14px;
-            background: var(--cream);
+            background: linear-gradient(135deg, var(--cream), #f8f4ee);
             border: 1px solid var(--warm-gray);
+            border-left: 2px solid var(--gold-light);
         }
 
         .values-list {
@@ -452,35 +539,48 @@
             padding: 12px;
             text-align: center;
             border: 1px solid var(--warm-gray);
-            background: #ffffff;
+            background: linear-gradient(180deg, #ffffff, var(--cream));
             box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+            transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
         }
+        .values-list .val:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transform: translateY(-2px);
+        }
+        .values-list .val:active { transform: translateY(-1px) scale(0.97); }
 
         .values-list .val .v-icon { font-size: 16px; display: block; margin-bottom: 4px; }
-        .values-list .val .v-text { font-size: 11px; color: #888; line-height: 1.4; }
+        .values-list .val .v-text { font-size: 11px; color: var(--text-light); line-height: 1.4; }
 
         .tags { display: flex; flex-wrap: wrap; gap: 5px; }
 
         .tag {
             padding: 4px 12px;
             font-size: 10px;
-            color: #888;
+            color: var(--text-light);
             border: 1px solid var(--warm-gray);
             letter-spacing: 1.5px;
             font-family: Inter, -apple-system, Arial, sans-serif;
-            background: var(--cream);
+            background: linear-gradient(180deg, #ffffff, var(--cream));
             box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .tag:hover {
+            border-color: var(--gold-light);
+            color: var(--gold-dark);
+            background: linear-gradient(180deg, #ffffff, #fcf5e8);
         }
 
         .contact-wrap { padding: 32px 44px 36px; }
 
         .contact-block {
             padding: 30px;
-            background: linear-gradient(160deg, #faf8f4 0%, #f2e8e0 100%);
+            background: linear-gradient(160deg, #faf8f4 0%, #f5ede6 50%, #f0e4da 100%);
             border: 1px solid #d4c0b8;
             text-align: center;
             position: relative;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.6);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(0,0,0,0.02);
         }
 
         .contact-block::before {
@@ -489,6 +589,13 @@
             top: -2px; left: 30px; right: 30px;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--burgundy), transparent);
+        }
+        .contact-block::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 20px; right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
         }
 
         .qr-box {
@@ -505,7 +612,9 @@
             box-shadow: 0 4px 12px rgba(107,42,58,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
             overflow: hidden;
             position: relative;
+            transition: box-shadow 0.2s, transform 0.15s;
         }
+        .qr-box:hover { box-shadow: 0 6px 20px rgba(107,42,58,0.12), inset 0 1px 0 rgba(255,255,255,0.8); }
 
         .qr-box .qr-icon { font-size: 22px; display: block; }
         .qr-box .qr-hint { font-size: 7px; color: #bbb; letter-spacing: 3px; font-family: Inter, -apple-system, Arial, sans-serif; }
@@ -544,18 +653,26 @@
             color: var(--burgundy);
             letter-spacing: 0.5px;
         }
+        .wechat-id.copied { animation: copyFlash 0.6s ease; }
+        @keyframes copyFlash {
+            0% { color: var(--burgundy); }
+            50% { color: var(--gold-dark); }
+            100% { color: var(--burgundy); }
+        }
         .wechat-copy {
-            background: var(--gold);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: #fff;
             border: none;
             border-radius: 4px;
             padding: 2px 10px;
             font-size: 11px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s, transform 0.15s;
             font-family: Inter, system-ui, sans-serif;
+            box-shadow: 0 2px 6px rgba(201,168,76,0.2);
         }
-        .wechat-copy:active { background: var(--gold-dark); }
+        .wechat-copy:hover { opacity: 0.9; }
+        .wechat-copy:active { transform: scale(0.92); opacity: 1; }
 
         .btn-group { display: flex; flex-direction: column; gap: 10px; }
 
@@ -586,21 +703,29 @@
 
         .btn-s {
             background: transparent;
-            border: 1px solid var(--charcoal);
-            color: var(--charcoal);
+            border: 1px solid var(--gold);
+            color: var(--gold-dark);
         }
 
-        .btn-s:hover { background: var(--charcoal); color: #fff; transform: translateY(-2px); }
+        .btn-s:hover { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: #fff; transform: translateY(-2px); border-color: var(--gold-dark); box-shadow: 0 6px 20px rgba(201,168,76,0.3); }
         .btn-s:active { transform: translateY(-1px) scale(0.97); }
 
         .footer {
             padding: 28px 44px 36px;
             text-align: center;
+            position: relative;
+        }
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 44px; right: 44px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
         }
 
-        .footer .motto { font-size: 12px; color: #bbb; letter-spacing: 5px; }
-        .footer .sub { font-size: 10px; color: #ccc; margin-top: 6px; letter-spacing: 3px; }
-        .footer .deco { font-size: 8px; color: #ddd; letter-spacing: 8px; margin-top: 10px; }
+        .footer .motto { font-size: 12px; color: var(--text-light); letter-spacing: 5px; }
+        .footer .sub { font-size: 10px; color: #bbb; margin-top: 6px; letter-spacing: 3px; }
+        .footer .deco { font-size: 8px; color: var(--gold-light); letter-spacing: 8px; margin-top: 10px; }
 
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(24px); }
@@ -680,6 +805,7 @@
             justify-content: space-between;
             padding: 20px 24px 16px;
             border-bottom: 1px solid #f0ece6;
+            background: linear-gradient(180deg, var(--cream), #ffffff);
         }
 
         .admin-panel .panel-head .pt { font-size: 14px; font-weight: 600; color: var(--charcoal); letter-spacing: 2px; font-family: Inter, -apple-system, Arial, sans-serif; }
@@ -920,7 +1046,7 @@
             <div class="section">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">ABOUT</span>
+                    <span class="label">◆ ABOUT ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="tagline" id="tagline">
@@ -933,7 +1059,7 @@
             <div class="section">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">PROFILE</span>
+                    <span class="label">◆ PROFILE ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="info-row">
@@ -955,7 +1081,7 @@
             <div class="section">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">STORY</span>
+                    <span class="label">◆ STORY ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="story-text">
@@ -971,7 +1097,7 @@
             <div class="section">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">OPC PAINS</span>
+                    <span class="label">◆ OPC PAINS ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="story-text">
@@ -991,7 +1117,7 @@
             <div class="section">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">SERVICES</span>
+                    <span class="label">◆ SERVICES ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="svc-grid">
@@ -1025,7 +1151,7 @@
             <div class="section">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">VALUES</span>
+                    <span class="label">◆ VALUES ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="values-list">
@@ -1051,7 +1177,7 @@
             <div class="section">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">AUDIENCE</span>
+                    <span class="label">◆ AUDIENCE ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="audience">
@@ -1066,7 +1192,7 @@
             <div class="section no-mb">
                 <div class="sec-head">
                     <span class="bar"></span>
-                    <span class="label">TAGS</span>
+                    <span class="label">◆ TAGS ◆</span>
                     <span class="line"></span>
                 </div>
                 <div class="tags">
@@ -1532,10 +1658,13 @@
 
             els.copyWechatBtn.addEventListener('click', function() {
                 var id = els.wechatDisplay.textContent;
+                var doCopy = function() {
+                    els.wechatDisplay.classList.add('copied');
+                    setTimeout(function() { els.wechatDisplay.classList.remove('copied'); }, 700);
+                    showToast('微信号已复制 ✓', 1000);
+                };
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(id).then(function() {
-                        showToast('微信号已复制 ✓', 1000);
-                    });
+                    navigator.clipboard.writeText(id).then(doCopy);
                 } else {
                     var ta = document.createElement('textarea');
                     ta.value = id;
@@ -1543,7 +1672,7 @@
                     ta.select();
                     document.execCommand('copy');
                     document.body.removeChild(ta);
-                    showToast('微信号已复制 ✓', 1000);
+                    doCopy();
                 }
             });
 
