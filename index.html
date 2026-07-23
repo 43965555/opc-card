@@ -525,6 +525,38 @@
         .contact-block .cname { font-family: "Playfair Display", serif; font-size: 20px; font-weight: 600; color: var(--burgundy); letter-spacing: 3px; font-style: italic; text-shadow: 0 1px 2px rgba(107,42,58,0.1); margin-bottom: 2px; }
         .contact-block .crole { font-size: 10px; color: #999; letter-spacing: 2px; font-family: Inter, -apple-system, Arial, sans-serif; margin-bottom: 18px; }
 
+        .wechat-id-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 6px 0 10px;
+            font-family: Inter, system-ui, sans-serif;
+        }
+        .wechat-label {
+            font-size: 11px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+        }
+        .wechat-id {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--burgundy);
+            letter-spacing: 0.5px;
+        }
+        .wechat-copy {
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: Inter, system-ui, sans-serif;
+        }
+        .wechat-copy:active { background: var(--gold-dark); }
+
         .btn-group { display: flex; flex-direction: column; gap: 10px; }
 
         .btn-p, .btn-s {
@@ -1062,6 +1094,11 @@
                 <div class="hint" id="contactHint">扫码联系主理人</div>
                 <div class="cname" id="contactName">Isabella</div>
                 <div class="crole" id="contactRole">一人公司创始人</div>
+                <div class="wechat-id-wrap">
+                    <span class="wechat-label">微信号</span>
+                    <span class="wechat-id" id="wechatDisplay">Isabella_OPC</span>
+                    <button class="wechat-copy" id="copyWechatBtn">复制</button>
+                </div>
                 <div class="btn-group">
                     <a class="btn-p" href="https://www.xiaohongshu.com/user/profile/69a18775000000001d01c83d" target="_blank">📕 小红书主页</a>
                     <a class="btn-s" href="javascript:void(0)" id="wechatBtn">💬 添加微信</a>
@@ -1148,6 +1185,10 @@
                 <span class="fl">联系方式提示语</span>
                 <input class="fi" id="editHint" placeholder="例: 扫码联系主理人" maxlength="40">
             </div>
+            <div class="field">
+                <span class="fl">微信号</span>
+                <input class="fi" id="editWechatId" placeholder="例: Isabella_OPC" maxlength="30">
+            </div>
             <div class="panel-actions">
                 <button class="btn-admin btn-save" id="adminSave">保存</button>
                 <button class="btn-admin btn-reset" id="adminReset">重置</button>
@@ -1170,6 +1211,7 @@
                 contactRole: '一人公司创始人',
                 tagline: '以OPC为纽带，做创业者的"土地"，让价值在这里自然生长。\n坚持线下面对面、线上跨城合作，每周一场社群活动，\n只做对一人公司真正有用的事。',
                 hint: '扫码联系主理人',
+                wechatId: 'Isabella_OPC',
                 avatar: '',
                 photos: ['', '', '']
             };
@@ -1194,6 +1236,8 @@
                 contactName: document.getElementById('contactName'),
                 contactRole: document.getElementById('contactRole'),
                 wechatBtn: document.getElementById('wechatBtn'),
+                wechatDisplay: document.getElementById('wechatDisplay'),
+                copyWechatBtn: document.getElementById('copyWechatBtn'),
                 trayBtn: document.getElementById('adminTrayBtn'),
                 exitBtn: document.getElementById('adminExitBtn'),
                 overlay: document.getElementById('adminOverlay'),
@@ -1204,6 +1248,7 @@
                 editContactRole: document.getElementById('editContactRole'),
                 editTagline: document.getElementById('editTagline'),
                 editHint: document.getElementById('editHint'),
+                editWechatId: document.getElementById('editWechatId'),
                 uploadZone: document.getElementById('uploadZone'),
                 qrFileInput: document.getElementById('qrFileInput'),
                 uploadPreview: document.getElementById('uploadPreview'),
@@ -1256,6 +1301,7 @@
                 if (data.contactRole) { els.contactRole.textContent = data.contactRole; }
                 if (data.tagline) { els.tagline.innerHTML = data.tagline.replace(/\n/g, '<br>'); }
                 if (data.hint) { els.contactHint.textContent = data.hint; }
+                if (data.wechatId) { els.wechatDisplay.textContent = data.wechatId; }
                 if (data.qr) {
                     currentQrData = data.qr;
                     els.qrImg.src = data.qr;
@@ -1320,6 +1366,7 @@
                 els.editContactRole.value = d.contactRole || '';
                 els.editTagline.value = (d.tagline || '').replace(/<br\s*\/?>/g, '\n');
                 els.editHint.value = d.hint || '';
+                els.editWechatId.value = d.wechatId || '';
                 if (d.qr) {
                     els.uploadPreview.src = d.qr;
                     els.uploadPreview.classList.add('show');
@@ -1418,6 +1465,7 @@
                     contactRole: els.editContactRole.value.trim() || DEFAULTS.contactRole,
                     tagline: els.editTagline.value.trim() || DEFAULTS.tagline,
                     hint: els.editHint.value.trim() || DEFAULTS.hint,
+                    wechatId: els.editWechatId.value.trim() || DEFAULTS.wechatId,
                     avatar: currentAvData,
                     photos: currentPhotosData.slice()
                 };
@@ -1476,6 +1524,28 @@
 
             // ===== EVENTS =====
             els.monogram.addEventListener('click', handleMonogramTap);
+
+            els.wechatBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openLightbox(currentQrData || els.qrImg.src);
+            });
+
+            els.copyWechatBtn.addEventListener('click', function() {
+                var id = els.wechatDisplay.textContent;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(id).then(function() {
+                        showToast('微信号已复制 ✓', 1000);
+                    });
+                } else {
+                    var ta = document.createElement('textarea');
+                    ta.value = id;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    showToast('微信号已复制 ✓', 1000);
+                }
+            });
 
             els.trayBtn.addEventListener('click', openPanel);
             els.exitBtn.addEventListener('click', exitAdminMode);
